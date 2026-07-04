@@ -1,0 +1,84 @@
+export type TarotCard = {
+  id: number;
+  name: string;
+  turkishName: string;
+  keywords: string[];
+  generalMeaning: string;
+  loveMeaning: string;
+  careerMeaning: string;
+};
+
+export const tarotCards: TarotCard[] = [
+  {
+    id: 1,
+    name: "The Fool",
+    turkishName: "Deli",
+    keywords: ["yeni başlangıç", "cesaret", "özgürlük", "bilinmezlik"],
+    generalMeaning:
+      "Yeni bir yola çıkma, risk alma ve bilinmeyene güvenme enerjisini anlatır.",
+    loveMeaning:
+      "Aşkta yeni bir dönem, spontane bir yakınlaşma ya da kalbin daha özgür davranma isteği görülebilir.",
+    careerMeaning:
+      "Kariyerde yeni bir fırsat, farklı bir alanı deneme ya da cesaret gerektiren bir başlangıç anlamına gelir.",
+  },
+  {
+    id: 2,
+    name: "The Magician",
+    turkishName: "Büyücü",
+    keywords: ["potansiyel", "beceri", "odak", "yaratma"],
+    generalMeaning:
+      "Elindeki kaynakları doğru kullanarak bir şeyi gerçeğe dönüştürme gücünü temsil eder.",
+    loveMeaning:
+      "Aşkta çekim, iletişim ve karşı tarafı etkileme enerjisi öne çıkar.",
+    careerMeaning:
+      "Kariyerde yeteneklerini gösterme, proje başlatma ve inisiyatif alma zamanıdır.",
+  },
+  {
+    id: 3,
+    name: "The High Priestess",
+    turkishName: "Baş Rahibe",
+    keywords: ["sezgi", "sır", "iç ses", "bekleyiş"],
+    generalMeaning:
+      "Her şeyin hemen görünür olmadığı, sezgilerin ve iç sesin önem kazandığı bir dönemi anlatır.",
+    loveMeaning:
+      "Aşkta gizli duygular, söylenmemiş şeyler veya karşı tarafı daha iyi gözlemleme ihtiyacı olabilir.",
+    careerMeaning:
+      "Kariyerde acele karar vermeden bilgi toplamak ve arka plandaki detayları görmek gerekir.",
+  },
+  {
+    id: 4,
+    name: "The Empress",
+    turkishName: "İmparatoriçe",
+    keywords: ["bereket", "şefkat", "güzellik", "üretkenlik"],
+    generalMeaning:
+      "Büyüme, verimlilik, yaratıcılık ve kendini besleme enerjisini temsil eder.",
+    loveMeaning:
+      "Aşkta ilgi, değer görme, romantizm ve ilişkinin daha sıcak bir hâle gelmesi anlamına gelir.",
+    careerMeaning:
+      "Kariyerde üretkenlik, yaratıcı fikirler ve emek verilen işlerin büyümesi görülebilir.",
+  },
+  {
+    id: 5,
+    name: "The Lovers",
+    turkishName: "Âşıklar",
+    keywords: ["seçim", "uyum", "bağ", "ilişki"],
+    generalMeaning:
+      "Kalp ile akıl arasında seçim yapmayı, uyumu ve önemli bir karar noktasını anlatır.",
+    loveMeaning:
+      "Aşkta güçlü bir bağ, karşılıklı çekim veya ilişkinin yönünü belirleyecek bir seçim anlamına gelir.",
+    careerMeaning:
+      "Kariyerde ortaklık, ekip uyumu veya değerlerine uygun bir seçim yapma teması öne çıkar.",
+  },
+  {
+    id: 6,
+    name: "The Star",
+    turkishName: "Yıldız",
+    keywords: ["umut", "şifa", "ilham", "yenilenme"],
+    generalMeaning:
+      "Zor bir dönemden sonra gelen umut, içsel toparlanma ve yeniden inanma enerjisini temsil eder.",
+    loveMeaning:
+      "Aşkta iyileşme, umutlanma ve daha sakin bir bağ kurma ihtimali görülebilir.",
+    careerMeaning:
+      "Kariyerde ilham veren bir hedef, görünür olma ve geleceğe dair umutların güçlenmesi anlamına gelir.",
+  },
+];
