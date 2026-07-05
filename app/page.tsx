@@ -19,6 +19,7 @@ type ReadingHistoryItem = {
 };
 
 const positions = ["Geçmiş", "Şimdi", "Yakın Gelecek"];
+const readingTypes: ReadingType[] = ["general", "love", "career"];
 
 const readingTypeLabels: Record<ReadingType, string> = {
   general: "Genel",
@@ -26,26 +27,39 @@ const readingTypeLabels: Record<ReadingType, string> = {
   career: "Kariyer",
 };
 
+const readingTypeDescriptions: Record<ReadingType, string> = {
+  general: "Genel enerjini ve yakın dönem yönünü yorumlar.",
+  love: "Duygusal bağları, hisleri ve ilişki dinamiklerini yorumlar.",
+  career: "Hedeflerini, kararlarını ve kariyer yolunu yorumlar.",
+};
+
 export default function Home() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
-  
-    useEffect(() => {
+  const [isHistoryLoaded, setIsHistoryLoaded] = useState(false);
+
+  useEffect(() => {
     const savedHistory = localStorage.getItem("destina-reading-history");
 
     if (savedHistory) {
       setReadingHistory(JSON.parse(savedHistory));
     }
+
+    setIsHistoryLoaded(true);
   }, []);
 
   useEffect(() => {
+    if (!isHistoryLoaded) {
+      return;
+    }
+
     localStorage.setItem(
       "destina-reading-history",
       JSON.stringify(readingHistory),
     );
-  }, [readingHistory]);
+  }, [readingHistory, isHistoryLoaded]);
 
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
@@ -73,11 +87,11 @@ export default function Home() {
     ]);
   }
 
-    function clearReadingHistory() {
+  function clearReadingHistory() {
     setReadingHistory([]);
     localStorage.removeItem("destina-reading-history");
   }
-  
+
   function getCardMeaning(card: TarotCard) {
     if (readingType === "love") {
       return card.loveMeaning;
@@ -123,76 +137,131 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#120914] text-white">
-      <section className="flex min-h-screen flex-col items-center px-6 py-16 text-center">
-        <p className="mb-4 text-sm uppercase tracking-[0.35em] text-purple-300">
-          Tarot & Sembol Yorumlama
-        </p>
+    <main className="relative min-h-screen overflow-hidden bg-[#0f0711] text-white">
+      <div className="absolute left-[-120px] top-[-120px] h-80 w-80 rounded-full bg-purple-500/20 blur-3xl" />
+      <div className="absolute bottom-[-160px] right-[-120px] h-96 w-96 rounded-full bg-fuchsia-400/20 blur-3xl" />
+      <div className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-200/10 blur-3xl" />
 
-        <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
-          Destina
-        </h1>
-
-        <p className="mb-8 max-w-2xl text-lg leading-8 text-zinc-300">
-          Kartların ve sembollerin anlattığı yolu birlikte yorumlayan,
-          yapay zekâ destekli mistik bir rehber.
-        </p>
-
-        <div className="mb-8 w-full max-w-2xl text-left">
-          <label className="mb-3 block text-sm font-semibold uppercase tracking-[0.25em] text-purple-200">
-            Niyetini Yaz
-          </label>
-
-          <textarea
-            value={userQuestion}
-            onChange={(event) => setUserQuestion(event.target.value)}
-            placeholder="Örneğin: Aşk hayatımda yakın zamanda ne olur?"
-            className="min-h-28 w-full resize-none rounded-3xl border border-purple-300/30 bg-white/10 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
-          />
+      <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center px-6 py-12 md:py-16">
+        <div className="mb-8 rounded-full border border-purple-300/30 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.3em] text-purple-200">
+          ✦ Destina Beta ✦
         </div>
 
-        <div className="mb-8 flex flex-wrap justify-center gap-3">
-          {(["general", "love", "career"] as ReadingType[]).map((type) => (
+        <div className="grid w-full items-center gap-10 lg:grid-cols-[1fr_430px]">
+          <div className="text-center lg:text-left">
+            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-purple-300">
+              Tarot & Sembol Yorumlama
+            </p>
+
+            <h1 className="mb-6 text-6xl font-bold tracking-tight md:text-8xl">
+              Destina
+            </h1>
+
+            <p className="mx-auto mb-8 max-w-2xl text-lg leading-8 text-zinc-300 lg:mx-0">
+              Kartların ve sembollerin anlattığı yolu birlikte yorumlayan,
+              yapay zekâ destekli mistik bir rehber.
+            </p>
+
+            <div className="grid gap-4 text-left sm:grid-cols-3">
+              <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
+                <p className="mb-2 text-2xl">🃏</p>
+                <p className="font-semibold text-purple-100">3 Kart Açılımı</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Geçmiş, şimdi ve yakın gelecek enerjisini gösterir.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
+                <p className="mb-2 text-2xl">✨</p>
+                <p className="font-semibold text-purple-100">Niyetli Yorum</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Yazdığın soruyu açılımın ana mesajına dahil eder.
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
+                <p className="mb-2 text-2xl">🌙</p>
+                <p className="font-semibold text-purple-100">Geçmiş Kaydı</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Son açılımlarını tarayıcı hafızasında saklar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-purple-300/25 bg-white/10 p-6 text-left shadow-2xl backdrop-blur">
+            <label className="mb-3 block text-sm font-semibold uppercase tracking-[0.25em] text-purple-200">
+              Niyetini Yaz
+            </label>
+
+            <textarea
+              value={userQuestion}
+              onChange={(event) => setUserQuestion(event.target.value)}
+              placeholder="Örneğin: Aşk hayatımda yakın zamanda ne olur?"
+              className="min-h-32 w-full resize-none rounded-3xl border border-purple-300/30 bg-[#120914]/70 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
+            />
+
+            <div className="mt-6 grid gap-3">
+              {readingTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setReadingType(type)}
+                  className={`rounded-2xl border px-5 py-4 text-left transition ${
+                    readingType === type
+                      ? "border-purple-200 bg-purple-300 text-[#120914]"
+                      : "border-purple-300/25 bg-white/5 text-purple-100 hover:bg-purple-300/10"
+                  }`}
+                >
+                  <span className="block font-semibold">
+                    {readingTypeLabels[type]}
+                  </span>
+                  <span
+                    className={`mt-1 block text-sm ${
+                      readingType === type ? "text-[#120914]/70" : "text-zinc-400"
+                    }`}
+                  >
+                    {readingTypeDescriptions[type]}
+                  </span>
+                </button>
+              ))}
+            </div>
+
             <button
-              key={type}
-              onClick={() => setReadingType(type)}
-              className={`rounded-full px-6 py-2 font-semibold transition ${
-                readingType === type
-                  ? "bg-purple-300 text-[#120914]"
-                  : "border border-purple-300/50 text-purple-200 hover:bg-purple-300/10"
-              }`}
+              onClick={drawThreeCards}
+              className="mt-6 w-full rounded-full bg-purple-300 px-8 py-4 font-bold text-[#120914] shadow-lg shadow-purple-950/40 transition hover:bg-purple-200"
             >
-              {readingTypeLabels[type]}
+              {readingTypeLabels[readingType]} Açılımı Yap
             </button>
-          ))}
+          </div>
         </div>
-
-        <button
-          onClick={drawThreeCards}
-          className="rounded-full bg-purple-300 px-8 py-3 font-semibold text-[#120914] transition hover:bg-purple-200"
-        >
-          {readingTypeLabels[readingType]} Açılımı Yap
-        </button>
 
         {drawnCards.length > 0 && (
           <>
-            <div className="mt-12 grid w-full max-w-6xl gap-6 md:grid-cols-3">
+            <div className="mt-14 grid w-full gap-6 md:grid-cols-3">
               {drawnCards.map((item) => (
                 <div
                   key={`${item.position}-${item.card.id}`}
-                  className="rounded-3xl border border-purple-300/30 bg-white/10 p-7 text-left shadow-2xl"
+                  className="group relative overflow-hidden rounded-[2rem] border border-purple-300/25 bg-gradient-to-b from-white/15 to-white/5 p-7 text-left shadow-2xl transition hover:-translate-y-1 hover:border-purple-200/50"
                 >
-                  <p className="mb-3 text-sm uppercase tracking-[0.25em] text-purple-200">
+                  <div className="absolute right-5 top-5 text-purple-200/60">
+                    ✦
+                  </div>
+
+                  <p className="mb-5 text-sm uppercase tracking-[0.25em] text-purple-200">
                     {item.position}
                   </p>
 
-                  <h2 className="text-3xl font-bold text-white">
-                    {item.card.turkishName}
-                  </h2>
+                  <div className="mb-6 flex h-44 items-center justify-center rounded-[1.5rem] border border-purple-300/20 bg-[#120914]/70">
+                    <div className="text-center">
+                      <p className="mb-3 text-4xl">☾</p>
+                      <h2 className="text-3xl font-bold text-white">
+                        {item.card.turkishName}
+                      </h2>
+                      <p className="mt-1 text-purple-200">{item.card.name}</p>
+                    </div>
+                  </div>
 
-                  <p className="mt-1 text-purple-200">{item.card.name}</p>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {item.card.keywords.map((keyword) => (
                       <span
                         key={keyword}
@@ -214,7 +283,7 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="mt-8 w-full max-w-4xl rounded-3xl border border-purple-300/30 bg-purple-300/10 p-8 text-left shadow-2xl">
+            <div className="mt-8 w-full max-w-4xl rounded-[2rem] border border-purple-300/30 bg-purple-300/10 p-8 text-left shadow-2xl backdrop-blur">
               <p className="mb-3 text-sm uppercase tracking-[0.25em] text-purple-200">
                 Açılımın Ana Mesajı
               </p>
@@ -227,8 +296,8 @@ export default function Home() {
         )}
 
         {readingHistory.length > 0 && (
-          <div className="mt-10 w-full max-w-4xl rounded-3xl border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl">
-                        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="mt-10 w-full max-w-4xl rounded-[2rem] border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl backdrop-blur">
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm uppercase tracking-[0.25em] text-purple-200">
                 Son Açılımlar
               </p>
