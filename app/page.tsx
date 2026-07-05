@@ -8,10 +8,19 @@ type DrawnCard = {
   card: TarotCard;
 };
 
+type ReadingType = "general" | "love" | "career";
+
 const positions = ["Geçmiş", "Şimdi", "Yakın Gelecek"];
+
+const readingTypeLabels: Record<ReadingType, string> = {
+  general: "Genel",
+  love: "Aşk",
+  career: "Kariyer",
+};
 
 export default function Home() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
+  const [readingType, setReadingType] = useState<ReadingType>("general");
 
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
@@ -24,6 +33,18 @@ export default function Home() {
     setDrawnCards(selectedCards);
   }
 
+  function getCardMeaning(card: TarotCard) {
+    if (readingType === "love") {
+      return card.loveMeaning;
+    }
+
+    if (readingType === "career") {
+      return card.careerMeaning;
+    }
+
+    return card.generalMeaning;
+  }
+
   function getSpreadSummary() {
     if (drawnCards.length === 0) {
       return "";
@@ -32,8 +53,17 @@ export default function Home() {
     const pastCard = drawnCards[0].card;
     const presentCard = drawnCards[1].card;
     const futureCard = drawnCards[2].card;
+    const selectedLabel = readingTypeLabels[readingType];
 
-    return `Bu açılımda geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması öne çıkıyor. Şu anda ${presentCard.turkishName} kartı, "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, geçmişten gelen bir etkinin bugünkü seçimlerine yansıdığını ve yakın gelecekte yeni bir yön belirleme ihtimalinin arttığını söylüyor.`;
+    if (readingType === "love") {
+      return `Bu aşk açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması duygusal alana iz bırakmış görünüyor. Şu anda ${presentCard.turkishName} kartı, ilişkilerde "${presentCard.keywords[0]}" enerjisinin daha belirgin olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, aşk konusunda "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, kalpte netleşme ve duygusal yönde bir seçim yapma ihtimalini öne çıkarıyor.`;
+    }
+
+    if (readingType === "career") {
+      return `Bu kariyer açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması iş ve hedefler üzerinde etkili olmuş. Şu anda ${presentCard.turkishName} kartı, kariyer alanında "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu söylüyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının yeni bir yön veya karar getirebileceğini gösteriyor. Genel olarak bu açılım, emek verilen konularda daha bilinçli ilerleme ve fırsatları doğru değerlendirme mesajı taşıyor.`;
+    }
+
+    return `Bu ${selectedLabel.toLowerCase()} açılımda geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması öne çıkıyor. Şu anda ${presentCard.turkishName} kartı, "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, geçmişten gelen bir etkinin bugünkü seçimlerine yansıdığını ve yakın gelecekte yeni bir yön belirleme ihtimalinin arttığını söylüyor.`;
   }
 
   return (
@@ -47,16 +77,32 @@ export default function Home() {
           Destina
         </h1>
 
-        <p className="mb-10 max-w-2xl text-lg leading-8 text-zinc-300">
+        <p className="mb-8 max-w-2xl text-lg leading-8 text-zinc-300">
           Kartların ve sembollerin anlattığı yolu birlikte yorumlayan,
           yapay zekâ destekli mistik bir rehber.
         </p>
+
+        <div className="mb-8 flex flex-wrap justify-center gap-3">
+          {(["general", "love", "career"] as ReadingType[]).map((type) => (
+            <button
+              key={type}
+              onClick={() => setReadingType(type)}
+              className={`rounded-full px-6 py-2 font-semibold transition ${
+                readingType === type
+                  ? "bg-purple-300 text-[#120914]"
+                  : "border border-purple-300/50 text-purple-200 hover:bg-purple-300/10"
+              }`}
+            >
+              {readingTypeLabels[type]}
+            </button>
+          ))}
+        </div>
 
         <button
           onClick={drawThreeCards}
           className="rounded-full bg-purple-300 px-8 py-3 font-semibold text-[#120914] transition hover:bg-purple-200"
         >
-          3 Kart Açılımı Yap
+          {readingTypeLabels[readingType]} Açılımı Yap
         </button>
 
         {drawnCards.length > 0 && (
@@ -88,27 +134,12 @@ export default function Home() {
                     ))}
                   </div>
 
-                  <div className="mt-6 space-y-5 text-zinc-200">
-                    <div>
-                      <h3 className="font-semibold text-purple-200">
-                        Genel Anlam
-                      </h3>
-                      <p className="mt-1 leading-7">
-                        {item.card.generalMeaning}
-                      </p>
-                    </div>
+                  <div className="mt-6 text-zinc-200">
+                    <h3 className="font-semibold text-purple-200">
+                      {readingTypeLabels[readingType]} Yorumu
+                    </h3>
 
-                    <div>
-                      <h3 className="font-semibold text-purple-200">Aşk</h3>
-                      <p className="mt-1 leading-7">{item.card.loveMeaning}</p>
-                    </div>
-
-                    <div>
-                      <h3 className="font-semibold text-purple-200">Kariyer</h3>
-                      <p className="mt-1 leading-7">
-                        {item.card.careerMeaning}
-                      </p>
-                    </div>
+                    <p className="mt-2 leading-7">{getCardMeaning(item.card)}</p>
                   </div>
                 </div>
               ))}
