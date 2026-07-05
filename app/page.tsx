@@ -46,7 +46,7 @@ export default function Home() {
       JSON.stringify(readingHistory),
     );
   }, [readingHistory]);
-  
+
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
@@ -73,6 +73,11 @@ export default function Home() {
     ]);
   }
 
+    function clearReadingHistory() {
+    setReadingHistory([]);
+    localStorage.removeItem("destina-reading-history");
+  }
+  
   function getCardMeaning(card: TarotCard) {
     if (readingType === "love") {
       return card.loveMeaning;
@@ -223,9 +228,18 @@ export default function Home() {
 
         {readingHistory.length > 0 && (
           <div className="mt-10 w-full max-w-4xl rounded-3xl border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl">
-            <p className="mb-5 text-sm uppercase tracking-[0.25em] text-purple-200">
-              Son Açılımlar
-            </p>
+                        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm uppercase tracking-[0.25em] text-purple-200">
+                Son Açılımlar
+              </p>
+
+              <button
+                onClick={clearReadingHistory}
+                className="rounded-full border border-purple-300/40 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-300 hover:text-[#120914]"
+              >
+                Geçmişi Temizle
+              </button>
+            </div>
 
             <div className="space-y-4">
               {readingHistory.map((historyItem) => (
