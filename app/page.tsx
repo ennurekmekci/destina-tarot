@@ -21,6 +21,7 @@ const readingTypeLabels: Record<ReadingType, string> = {
 export default function Home() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [readingType, setReadingType] = useState<ReadingType>("general");
+  const [userQuestion, setUserQuestion] = useState("");
 
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
@@ -45,6 +46,16 @@ export default function Home() {
     return card.generalMeaning;
   }
 
+  function getQuestionIntro() {
+    const trimmedQuestion = userQuestion.trim();
+
+    if (!trimmedQuestion) {
+      return "";
+    }
+
+    return `Bu açılım "${trimmedQuestion}" niyeti üzerinden yorumlanıyor. `;
+  }
+
   function getSpreadSummary() {
     if (drawnCards.length === 0) {
       return "";
@@ -54,16 +65,17 @@ export default function Home() {
     const presentCard = drawnCards[1].card;
     const futureCard = drawnCards[2].card;
     const selectedLabel = readingTypeLabels[readingType];
+    const questionIntro = getQuestionIntro();
 
     if (readingType === "love") {
-      return `Bu aşk açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması duygusal alana iz bırakmış görünüyor. Şu anda ${presentCard.turkishName} kartı, ilişkilerde "${presentCard.keywords[0]}" enerjisinin daha belirgin olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, aşk konusunda "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, kalpte netleşme ve duygusal yönde bir seçim yapma ihtimalini öne çıkarıyor.`;
+      return `${questionIntro}Bu aşk açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması duygusal alana iz bırakmış görünüyor. Şu anda ${presentCard.turkishName} kartı, ilişkilerde "${presentCard.keywords[0]}" enerjisinin daha belirgin olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, aşk konusunda "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, kalpte netleşme ve duygusal yönde bir seçim yapma ihtimalini öne çıkarıyor.`;
     }
 
     if (readingType === "career") {
-      return `Bu kariyer açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması iş ve hedefler üzerinde etkili olmuş. Şu anda ${presentCard.turkishName} kartı, kariyer alanında "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu söylüyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının yeni bir yön veya karar getirebileceğini gösteriyor. Genel olarak bu açılım, emek verilen konularda daha bilinçli ilerleme ve fırsatları doğru değerlendirme mesajı taşıyor.`;
+      return `${questionIntro}Bu kariyer açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması iş ve hedefler üzerinde etkili olmuş. Şu anda ${presentCard.turkishName} kartı, kariyer alanında "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu söylüyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının yeni bir yön veya karar getirebileceğini gösteriyor. Genel olarak bu açılım, emek verilen konularda daha bilinçli ilerleme ve fırsatları doğru değerlendirme mesajı taşıyor.`;
     }
 
-    return `Bu ${selectedLabel.toLowerCase()} açılımda geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması öne çıkıyor. Şu anda ${presentCard.turkishName} kartı, "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, geçmişten gelen bir etkinin bugünkü seçimlerine yansıdığını ve yakın gelecekte yeni bir yön belirleme ihtimalinin arttığını söylüyor.`;
+    return `${questionIntro}Bu ${selectedLabel.toLowerCase()} açılımda geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması öne çıkıyor. Şu anda ${presentCard.turkishName} kartı, "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, geçmişten gelen bir etkinin bugünkü seçimlerine yansıdığını ve yakın gelecekte yeni bir yön belirleme ihtimalinin arttığını söylüyor.`;
   }
 
   return (
@@ -81,6 +93,19 @@ export default function Home() {
           Kartların ve sembollerin anlattığı yolu birlikte yorumlayan,
           yapay zekâ destekli mistik bir rehber.
         </p>
+
+        <div className="mb-8 w-full max-w-2xl text-left">
+          <label className="mb-3 block text-sm font-semibold uppercase tracking-[0.25em] text-purple-200">
+            Niyetini Yaz
+          </label>
+
+          <textarea
+            value={userQuestion}
+            onChange={(event) => setUserQuestion(event.target.value)}
+            placeholder="Örneğin: Aşk hayatımda yakın zamanda ne olur?"
+            className="min-h-28 w-full resize-none rounded-3xl border border-purple-300/30 bg-white/10 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
+          />
+        </div>
 
         <div className="mb-8 flex flex-wrap justify-center gap-3">
           {(["general", "love", "career"] as ReadingType[]).map((type) => (
