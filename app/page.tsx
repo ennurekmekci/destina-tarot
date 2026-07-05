@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tarotCards, type TarotCard } from "@/data/tarotCards";
 
 type DrawnCard = {
@@ -31,7 +31,22 @@ export default function Home() {
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
+  
+    useEffect(() => {
+    const savedHistory = localStorage.getItem("destina-reading-history");
 
+    if (savedHistory) {
+      setReadingHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "destina-reading-history",
+      JSON.stringify(readingHistory),
+    );
+  }, [readingHistory]);
+  
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
