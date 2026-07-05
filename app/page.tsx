@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { tarotCards, type TarotCard } from "@/data/tarotCards";
+import { symbols } from "@/data/symbols";
 
 type DrawnCard = {
   position: string;
@@ -37,6 +38,7 @@ export default function Home() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
+  const [symbolSearch, setSymbolSearch] = useState("");
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
   const [isHistoryLoaded, setIsHistoryLoaded] = useState(false);
 
@@ -91,6 +93,21 @@ export default function Home() {
     setReadingHistory([]);
     localStorage.removeItem("destina-reading-history");
   }
+
+    const filteredSymbols = symbols.filter((symbol) => {
+    const searchText = symbolSearch.trim().toLocaleLowerCase("tr-TR");
+
+    if (!searchText) {
+      return symbols;
+    }
+
+    return (
+      symbol.name.toLocaleLowerCase("tr-TR").includes(searchText) ||
+      symbol.keywords.some((keyword) =>
+        keyword.toLocaleLowerCase("tr-TR").includes(searchText),
+      )
+    );
+  });
 
   function getCardMeaning(card: TarotCard) {
     if (readingType === "love") {
@@ -345,6 +362,69 @@ export default function Home() {
             </div>
           </div>
         )}
+                <div className="mt-10 w-full max-w-4xl rounded-[2rem] border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl backdrop-blur">
+          <p className="mb-3 text-sm uppercase tracking-[0.25em] text-purple-200">
+            Sembol Sözlüğü
+          </p>
+
+          <p className="mb-6 text-zinc-300">
+            Kahve falı veya sembolik yorumlarda gördüğün şekli ara. Örneğin:
+            kuş, yol, kalp, anahtar, göz, balık.
+          </p>
+
+          <input
+            value={symbolSearch}
+            onChange={(event) => setSymbolSearch(event.target.value)}
+            placeholder="Sembol ara..."
+            className="mb-6 w-full rounded-full border border-purple-300/30 bg-[#120914]/70 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
+          />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {filteredSymbols.map((symbol) => (
+              <div
+                key={symbol.id}
+                className="rounded-2xl border border-purple-300/20 bg-[#120914]/60 p-5"
+              >
+                <h3 className="text-xl font-bold text-white">{symbol.name}</h3>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {symbol.keywords.map((keyword) => (
+                    <span
+                      key={keyword}
+                      className="rounded-full bg-purple-300/15 px-3 py-1 text-sm text-purple-100"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
+
+                <p className="mt-4 leading-7 text-zinc-300">
+                  {symbol.meaning}
+                </p>
+
+                <div className="mt-4 space-y-3 text-sm text-zinc-300">
+                  <p>
+                    <span className="font-semibold text-purple-200">Aşk:</span>{" "}
+                    {symbol.loveMeaning}
+                  </p>
+
+                  <p>
+                    <span className="font-semibold text-purple-200">
+                      Kariyer:
+                    </span>{" "}
+                    {symbol.careerMeaning}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredSymbols.length === 0 && (
+            <p className="mt-4 text-zinc-400">
+              Bu sembol henüz sözlükte yok. Sonra yeni semboller ekleyebiliriz.
+            </p>
+          )}
+        </div>
       </section>
     </main>
   );
