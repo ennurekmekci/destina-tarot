@@ -10,6 +10,14 @@ type DrawnCard = {
 
 type ReadingType = "general" | "love" | "career";
 
+type ReadingHistoryItem = {
+  id: string;
+  readingType: ReadingType;
+  question: string;
+  cards: DrawnCard[];
+  createdAt: string;
+};
+
 const positions = ["Geçmiş", "Şimdi", "Yakın Gelecek"];
 
 const readingTypeLabels: Record<ReadingType, string> = {
@@ -22,6 +30,7 @@ export default function Home() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
+  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
 
   function drawThreeCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
@@ -31,7 +40,22 @@ export default function Home() {
       card,
     }));
 
+    const newHistoryItem: ReadingHistoryItem = {
+      id: `${Date.now()}-${Math.random()}`,
+      readingType,
+      question: userQuestion.trim() || "Niyet yazılmadı",
+      cards: selectedCards,
+      createdAt: new Date().toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
     setDrawnCards(selectedCards);
+    setReadingHistory((previousHistory) => [
+      newHistoryItem,
+      ...previousHistory.slice(0, 4),
+    ]);
   }
 
   function getCardMeaning(card: TarotCard) {
@@ -180,6 +204,48 @@ export default function Home() {
               </p>
             </div>
           </>
+        )}
+
+        {readingHistory.length > 0 && (
+          <div className="mt-10 w-full max-w-4xl rounded-3xl border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl">
+            <p className="mb-5 text-sm uppercase tracking-[0.25em] text-purple-200">
+              Son Açılımlar
+            </p>
+
+            <div className="space-y-4">
+              {readingHistory.map((historyItem) => (
+                <div
+                  key={historyItem.id}
+                  className="rounded-2xl border border-purple-300/20 bg-[#120914]/60 p-5"
+                >
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-semibold text-purple-100">
+                      {readingTypeLabels[historyItem.readingType]} Açılımı
+                    </p>
+
+                    <p className="text-sm text-zinc-400">
+                      {historyItem.createdAt}
+                    </p>
+                  </div>
+
+                  <p className="mb-3 text-sm text-zinc-300">
+                    “{historyItem.question}”
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {historyItem.cards.map((item) => (
+                      <span
+                        key={`${historyItem.id}-${item.position}`}
+                        className="rounded-full bg-purple-300/15 px-3 py-1 text-sm text-purple-100"
+                      >
+                        {item.position}: {item.card.turkishName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </section>
     </main>
