@@ -1,4 +1,4 @@
-import Link from "next/link";
+import FeatureCard from "@/components/FeatureCard";
 import PageShell from "@/components/PageShell";
 
 export default function Home() {
@@ -17,45 +17,31 @@ export default function Home() {
       </h1>
 
       <p className="mb-10 max-w-2xl text-lg leading-8 text-zinc-300">
-        Kartların, niyetlerin ve sembollerin anlattığı yolu daha düzenli,
-        daha sezgisel ve daha kişisel yorumlayan mistik bir rehber.
+        Kartların, niyetlerin ve sembollerin anlattığı yolu daha düzenli, daha
+        sezgisel ve daha kişisel yorumlayan mistik bir rehber.
       </p>
 
       <div className="grid w-full max-w-4xl gap-5 md:grid-cols-3">
-        <Link
+        <FeatureCard
           href="/tarot"
-          className="rounded-[2rem] border border-purple-300/25 bg-white/10 p-7 text-left shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:border-purple-200/50"
-        >
-          <p className="mb-4 text-3xl">🃏</p>
-          <h2 className="text-2xl font-bold text-white">Tarot Açılımı</h2>
-          <p className="mt-3 leading-7 text-zinc-300">
-            Niyetini yaz, Genel / Aşk / Kariyer seç ve 3 kart açılımını gör.
-          </p>
-        </Link>
+          icon="🃏"
+          title="Tarot Açılımı"
+          description="Niyetini yaz, Genel / Aşk / Kariyer seç ve 3 kart açılımını gör."
+        />
 
-        <Link
+        <FeatureCard
           href="/symbols"
-          className="rounded-[2rem] border border-purple-300/25 bg-white/10 p-7 text-left shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:border-purple-200/50"
-        >
-          <p className="mb-4 text-3xl">☕</p>
-          <h2 className="text-2xl font-bold text-white">Sembol Sözlüğü</h2>
-          <p className="mt-3 leading-7 text-zinc-300">
-            Kahve falı ve sembolik yorumlarda gördüğün şekillerin anlamlarını
-            ara.
-          </p>
-        </Link>
+          icon="☕"
+          title="Sembol Sözlüğü"
+          description="Kahve falı ve sembolik yorumlarda gördüğün şekillerin anlamlarını ara."
+        />
 
-        <Link
+        <FeatureCard
           href="/history"
-          className="rounded-[2rem] border border-purple-300/25 bg-white/10 p-7 text-left shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:border-purple-200/50"
-        >
-          <p className="mb-4 text-3xl">🌙</p>
-          <h2 className="text-2xl font-bold text-white">Açılım Geçmişi</h2>
-          <p className="mt-3 leading-7 text-zinc-300">
-            Son açılımlarını kaydet, geçmiş niyetlerini ve çıkan kartları takip
-            et.
-          </p>
-        </Link>
+          icon="🌙"
+          title="Açılım Geçmişi"
+          description="Son açılımlarını kaydet, geçmiş niyetlerini ve çıkan kartları takip et."
+        />
       </div>
     </PageShell>
   );
