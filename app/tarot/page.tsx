@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageShell from "@/components/PageShell";
+import TarotInfoCard from "@/components/TarotInfoCard";
 import TarotResultCard from "@/components/TarotResultCard";
 import { tarotCards, type TarotCard } from "@/data/tarotCards";
 
@@ -181,29 +182,23 @@ export default function TarotPage() {
           </p>
 
           <div className="grid gap-4 text-left sm:grid-cols-3">
-            <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
-              <p className="mb-2 text-2xl">🃏</p>
-              <p className="font-semibold text-purple-100">3 Kart Açılımı</p>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Geçmiş, şimdi ve yakın gelecek enerjisini gösterir.
-              </p>
-            </div>
+            <TarotInfoCard
+              icon="🃏"
+              title="3 Kart Açılımı"
+              description="Geçmiş, şimdi ve yakın gelecek enerjisini gösterir."
+            />
 
-            <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
-              <p className="mb-2 text-2xl">✨</p>
-              <p className="font-semibold text-purple-100">Niyetli Yorum</p>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Yazdığın soruyu açılımın ana mesajına dahil eder.
-              </p>
-            </div>
+            <TarotInfoCard
+              icon="✨"
+              title="Niyetli Yorum"
+              description="Yazdığın soruyu açılımın ana mesajına dahil eder."
+            />
 
-            <div className="rounded-3xl border border-purple-300/20 bg-white/5 p-5">
-              <p className="mb-2 text-2xl">🌙</p>
-              <p className="font-semibold text-purple-100">Geçmiş Kaydı</p>
-              <p className="mt-2 text-sm leading-6 text-zinc-400">
-                Son açılımlarını tarayıcı hafızasında saklar.
-              </p>
-            </div>
+            <TarotInfoCard
+              icon="🌙"
+              title="Geçmiş Kaydı"
+              description="Son açılımlarını tarayıcı hafızasında saklar."
+            />
           </div>
         </div>
 
@@ -233,6 +228,7 @@ export default function TarotPage() {
                 <span className="block font-semibold">
                   {readingTypeLabels[type]}
                 </span>
+
                 <span
                   className={`mt-1 block text-sm ${
                     readingType === type ? "text-[#120914]/70" : "text-zinc-400"
