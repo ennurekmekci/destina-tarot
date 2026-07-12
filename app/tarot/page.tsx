@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageShell from "@/components/PageShell";
+import TarotResultCard from "@/components/TarotResultCard";
 import { tarotCards, type TarotCard } from "@/data/tarotCards";
 
 type DrawnCard = {
@@ -256,47 +257,13 @@ export default function TarotPage() {
         <>
           <div className="mt-14 grid w-full gap-6 md:grid-cols-3">
             {drawnCards.map((item) => (
-              <div
+              <TarotResultCard
                 key={`${item.position}-${item.card.id}`}
-                className="group relative overflow-hidden rounded-[2rem] border border-purple-300/25 bg-gradient-to-b from-white/15 to-white/5 p-7 text-left shadow-2xl transition hover:-translate-y-1 hover:border-purple-200/50"
-              >
-                <div className="absolute right-5 top-5 text-purple-200/60">
-                  ✦
-                </div>
-
-                <p className="mb-5 text-sm uppercase tracking-[0.25em] text-purple-200">
-                  {item.position}
-                </p>
-
-                <div className="mb-6 flex h-44 items-center justify-center rounded-[1.5rem] border border-purple-300/20 bg-[#120914]/70">
-                  <div className="text-center">
-                    <p className="mb-3 text-4xl">☾</p>
-                    <h2 className="text-3xl font-bold text-white">
-                      {item.card.turkishName}
-                    </h2>
-                    <p className="mt-1 text-purple-200">{item.card.name}</p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {item.card.keywords.map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="rounded-full bg-purple-300/20 px-3 py-1 text-sm text-purple-100"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-6 text-zinc-200">
-                  <h3 className="font-semibold text-purple-200">
-                    {readingTypeLabels[readingType]} Yorumu
-                  </h3>
-
-                  <p className="mt-2 leading-7">{getCardMeaning(item.card)}</p>
-                </div>
-              </div>
+                position={item.position}
+                card={item.card}
+                readingTypeLabel={readingTypeLabels[readingType]}
+                meaning={getCardMeaning(item.card)}
+              />
             ))}
           </div>
 
