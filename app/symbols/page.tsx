@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import PageHeader from "@/components/PageHeader";
 import PageShell from "@/components/PageShell";
 import { symbols } from "@/data/symbols";
 
@@ -32,21 +33,11 @@ export default function SymbolsPage() {
         ← Ana Sayfaya Dön
       </Link>
 
-      <div className="mb-10 text-center">
-        <div className="mb-6 inline-block rounded-full border border-purple-300/30 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.3em] text-purple-200">
-          ☕ Sembol Sözlüğü
-        </div>
-
-        <h1 className="mb-5 text-5xl font-bold tracking-tight md:text-7xl">
-          Sembolleri Ara
-        </h1>
-
-        <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-300">
-          Kahve falı veya sembolik yorumlarda gördüğün şeklin anlamını ara.
-          Kuş, yol, kalp, anahtar, göz veya balık gibi sembollerle
-          başlayabilirsin.
-        </p>
-      </div>
+      <PageHeader
+        badge="☕ Sembol Sözlüğü"
+        title="Sembolleri Ara"
+        description="Kahve falı veya sembolik yorumlarda gördüğün şeklin anlamını ara. Kuş, yol, kalp, anahtar, göz veya balık gibi sembollerle başlayabilirsin."
+      />
 
       <div className="mx-auto mb-8 max-w-2xl">
         <input
