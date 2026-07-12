@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageShell from "@/components/PageShell";
+import ReadingTypeButton from "@/components/ReadingTypeButton";
 import TarotInfoCard from "@/components/TarotInfoCard";
 import TarotResultCard from "@/components/TarotResultCard";
 import { tarotCards, type TarotCard } from "@/data/tarotCards";
@@ -216,27 +217,13 @@ export default function TarotPage() {
 
           <div className="mt-6 grid gap-3">
             {readingTypes.map((type) => (
-              <button
+              <ReadingTypeButton
                 key={type}
+                label={readingTypeLabels[type]}
+                description={readingTypeDescriptions[type]}
+                isSelected={readingType === type}
                 onClick={() => setReadingType(type)}
-                className={`rounded-2xl border px-5 py-4 text-left transition ${
-                  readingType === type
-                    ? "border-purple-200 bg-purple-300 text-[#120914]"
-                    : "border-purple-300/25 bg-white/5 text-purple-100 hover:bg-purple-300/10"
-                }`}
-              >
-                <span className="block font-semibold">
-                  {readingTypeLabels[type]}
-                </span>
-
-                <span
-                  className={`mt-1 block text-sm ${
-                    readingType === type ? "text-[#120914]/70" : "text-zinc-400"
-                  }`}
-                >
-                  {readingTypeDescriptions[type]}
-                </span>
-              </button>
+              />
             ))}
           </div>
 
