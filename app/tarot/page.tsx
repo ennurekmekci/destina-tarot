@@ -20,6 +20,12 @@ type ReadingHistoryItem = {
   question: string;
   cards: DrawnCard[];
   createdAt: string;
+  summary?: {
+    flowHeadline: string;
+    flowDetail: string;
+    adviceHeadline: string;
+    adviceDetail: string;
+  };
 };
 
 type ReadingSection = SixCardReading["pastSummary"];
@@ -109,37 +115,43 @@ export default function TarotPage() {
   }, [readingHistory, isHistoryLoaded]);
 
   function drawSixCards() {
-    const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
+  const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
-    const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
-      position: positions[index],
-      card,
-    }));
+  const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
+    position: positions[index],
+    card,
+  }));
 
-    const generatedReading = generateSixCardReading({
-      question: userQuestion,
-      readingType,
-      drawnCards: selectedCards,
-    });
+  const generatedReading = generateSixCardReading({
+    question: userQuestion,
+    readingType,
+    drawnCards: selectedCards,
+  });
 
-    const newHistoryItem: ReadingHistoryItem = {
-      id: `${Date.now()}-${Math.random()}`,
-      readingType,
-      question: userQuestion.trim() || "Niyet yazılmadı",
-      cards: selectedCards,
-      createdAt: new Date().toLocaleTimeString("tr-TR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+  const newHistoryItem: ReadingHistoryItem = {
+    id: `${Date.now()}-${Math.random()}`,
+    readingType,
+    question: userQuestion.trim() || "Niyet yazılmadı",
+    cards: selectedCards,
+    createdAt: new Date().toLocaleTimeString("tr-TR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    summary: {
+      flowHeadline: generatedReading.flowSummary.headline,
+      flowDetail: generatedReading.flowSummary.detail,
+      adviceHeadline: generatedReading.advice.headline,
+      adviceDetail: generatedReading.advice.detail,
+    },
+  };
 
-    setDrawnCards(selectedCards);
-    setReadingResult(generatedReading);
-    setReadingHistory((previousHistory) => [
-      newHistoryItem,
-      ...previousHistory.slice(0, 4),
-    ]);
-  }
+  setDrawnCards(selectedCards);
+  setReadingResult(generatedReading);
+  setReadingHistory((previousHistory) => [
+    newHistoryItem,
+    ...previousHistory.slice(0, 4),
+  ]);
+}
 
   function getCardMeaning(card: DrawnCard["card"]) {
     if (readingType === "love") {
