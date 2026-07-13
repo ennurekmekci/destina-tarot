@@ -6,14 +6,13 @@ import PageShell from "@/components/PageShell";
 import ReadingTypeButton from "@/components/ReadingTypeButton";
 import TarotInfoCard from "@/components/TarotInfoCard";
 import TarotResultCard from "@/components/TarotResultCard";
-import { tarotCards, type TarotCard } from "@/data/tarotCards";
-
-type DrawnCard = {
-  position: string;
-  card: TarotCard;
-};
-
-type ReadingType = "general" | "love" | "career";
+import { tarotCards } from "@/data/tarotCards";
+import {
+  generateSixCardReading,
+  type DrawnCard,
+  type ReadingType,
+  type SixCardReading,
+} from "@/lib/readingEngine";
 
 type ReadingHistoryItem = {
   id: string;
@@ -23,7 +22,17 @@ type ReadingHistoryItem = {
   createdAt: string;
 };
 
-const positions = ["Geçmiş", "Şimdi", "Yakın Gelecek"];
+type ReadingSection = SixCardReading["pastSummary"];
+
+const positions = [
+  "Geçmiş Zaman 1",
+  "Geçmiş Zaman 2",
+  "Şimdiki Zaman 1",
+  "Şimdiki Zaman 2",
+  "Gelecek Zaman 1",
+  "Gelecek Zaman 2",
+];
+
 const readingTypes: ReadingType[] = ["general", "love", "career"];
 
 const readingTypeLabels: Record<ReadingType, string> = {
@@ -38,8 +47,41 @@ const readingTypeDescriptions: Record<ReadingType, string> = {
   career: "Hedeflerini, kararlarını ve kariyer yolunu yorumlar.",
 };
 
+function ReadingTextBox({
+  label,
+  section,
+  variant = "default",
+}: {
+  label: string;
+  section: ReadingSection;
+  variant?: "default" | "highlight";
+}) {
+  return (
+    <div
+      className={`mt-6 rounded-[2rem] border p-7 text-left shadow-2xl backdrop-blur ${
+        variant === "highlight"
+          ? "border-purple-300/30 bg-purple-300/10"
+          : "border-purple-300/30 bg-white/5"
+      }`}
+    >
+      <p className="mb-3 text-sm uppercase tracking-[0.25em] text-purple-200">
+        {label}
+      </p>
+
+      <p className="mb-3 text-xl font-bold leading-8 text-white">
+        {section.headline}
+      </p>
+
+      <p className="leading-8 text-zinc-200">{section.detail}</p>
+    </div>
+  );
+}
+
 export default function TarotPage() {
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
+  const [readingResult, setReadingResult] = useState<SixCardReading | null>(
+    null,
+  );
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
@@ -66,13 +108,19 @@ export default function TarotPage() {
     );
   }, [readingHistory, isHistoryLoaded]);
 
-  function drawThreeCards() {
+  function drawSixCards() {
     const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
-    const selectedCards = shuffledCards.slice(0, 3).map((card, index) => ({
+    const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
       position: positions[index],
       card,
     }));
+
+    const generatedReading = generateSixCardReading({
+      question: userQuestion,
+      readingType,
+      drawnCards: selectedCards,
+    });
 
     const newHistoryItem: ReadingHistoryItem = {
       id: `${Date.now()}-${Math.random()}`,
@@ -86,13 +134,14 @@ export default function TarotPage() {
     };
 
     setDrawnCards(selectedCards);
+    setReadingResult(generatedReading);
     setReadingHistory((previousHistory) => [
       newHistoryItem,
       ...previousHistory.slice(0, 4),
     ]);
   }
 
-  function getCardMeaning(card: TarotCard) {
+  function getCardMeaning(card: DrawnCard["card"]) {
     if (readingType === "love") {
       return card.loveMeaning;
     }
@@ -104,37 +153,9 @@ export default function TarotPage() {
     return card.generalMeaning;
   }
 
-  function getQuestionIntro() {
-    const trimmedQuestion = userQuestion.trim();
-
-    if (!trimmedQuestion) {
-      return "";
-    }
-
-    return `Bu açılım "${trimmedQuestion}" niyeti üzerinden yorumlanıyor. `;
-  }
-
-  function getSpreadSummary() {
-    if (drawnCards.length === 0) {
-      return "";
-    }
-
-    const pastCard = drawnCards[0].card;
-    const presentCard = drawnCards[1].card;
-    const futureCard = drawnCards[2].card;
-    const selectedLabel = readingTypeLabels[readingType];
-    const questionIntro = getQuestionIntro();
-
-    if (readingType === "love") {
-      return `${questionIntro}Bu aşk açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması duygusal alana iz bırakmış görünüyor. Şu anda ${presentCard.turkishName} kartı, ilişkilerde "${presentCard.keywords[0]}" enerjisinin daha belirgin olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, aşk konusunda "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, kalpte netleşme ve duygusal yönde bir seçim yapma ihtimalini öne çıkarıyor.`;
-    }
-
-    if (readingType === "career") {
-      return `${questionIntro}Bu kariyer açılımında geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması iş ve hedefler üzerinde etkili olmuş. Şu anda ${presentCard.turkishName} kartı, kariyer alanında "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu söylüyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının yeni bir yön veya karar getirebileceğini gösteriyor. Genel olarak bu açılım, emek verilen konularda daha bilinçli ilerleme ve fırsatları doğru değerlendirme mesajı taşıyor.`;
-    }
-
-    return `${questionIntro}Bu ${selectedLabel.toLowerCase()} açılımda geçmişte ${pastCard.turkishName} kartının temsil ettiği "${pastCard.keywords[0]}" teması öne çıkıyor. Şu anda ${presentCard.turkishName} kartı, "${presentCard.keywords[0]}" enerjisinin daha görünür olduğunu anlatıyor. Yakın gelecekte ise ${futureCard.turkishName} kartı, "${futureCard.keywords[0]}" temasının güçlenebileceğini gösteriyor. Genel olarak bu açılım, geçmişten gelen bir etkinin bugünkü seçimlerine yansıdığını ve yakın gelecekte yeni bir yön belirleme ihtimalinin arttığını söylüyor.`;
-  }
+  const pastCards = drawnCards.slice(0, 2);
+  const presentCards = drawnCards.slice(2, 4);
+  const futureCards = drawnCards.slice(4, 6);
 
   return (
     <PageShell className="flex min-h-screen max-w-7xl flex-col items-center py-12 md:py-16">
@@ -164,13 +185,13 @@ export default function TarotPage() {
       </div>
 
       <div className="mb-8 rounded-full border border-purple-300/30 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.3em] text-purple-200">
-        ✦ Tarot Açılımı ✦
+        ✦ Destina Yorum Motoru ✦
       </div>
 
       <div className="grid w-full items-center gap-10 lg:grid-cols-[1fr_430px]">
         <div className="text-center lg:text-left">
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-purple-300">
-            Niyetli 3 Kart Açılımı
+            Niyetli 6 Kart Açılımı
           </p>
 
           <h1 className="mb-6 text-6xl font-bold tracking-tight md:text-8xl">
@@ -178,27 +199,27 @@ export default function TarotPage() {
           </h1>
 
           <p className="mx-auto mb-8 max-w-2xl text-lg leading-8 text-zinc-300 lg:mx-0">
-            Sorunu yaz, açılım türünü seç ve geçmiş, şimdi, yakın gelecek
-            çizgisinde kartların verdiği mesajı oku.
+            Sorunu yaz, açılım türünü seç ve geçmiş zaman, şimdiki zaman,
+            gelecek zaman çizgisinde ikişer karttan oluşan yorumunu oku.
           </p>
 
           <div className="grid gap-4 text-left sm:grid-cols-3">
             <TarotInfoCard
               icon="🃏"
-              title="3 Kart Açılımı"
-              description="Geçmiş, şimdi ve yakın gelecek enerjisini gösterir."
+              title="6 Kart Açılımı"
+              description="Geçmiş, şimdiki zaman ve gelecek zaman için ikişer kart seçer."
             />
 
             <TarotInfoCard
               icon="✨"
-              title="Niyetli Yorum"
-              description="Yazdığın soruyu açılımın ana mesajına dahil eder."
+              title="Birlikte Yorum"
+              description="Kartları tek tek değil, dönem çiftleri olarak okur."
             />
 
             <TarotInfoCard
               icon="🌙"
-              title="Geçmiş Kaydı"
-              description="Son açılımlarını tarayıcı hafızasında saklar."
+              title="Destina Tavsiyesi"
+              description="Altı kartın genel enerjisinden sonuç ve tavsiye üretir."
             />
           </div>
         </div>
@@ -211,7 +232,7 @@ export default function TarotPage() {
           <textarea
             value={userQuestion}
             onChange={(event) => setUserQuestion(event.target.value)}
-            placeholder="Örneğin: Aşk hayatımda yakın zamanda ne olur?"
+            placeholder="Örneğin: Staj bulabilecek miyim?"
             className="min-h-32 w-full resize-none rounded-3xl border border-purple-300/30 bg-[#120914]/70 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
           />
 
@@ -228,37 +249,113 @@ export default function TarotPage() {
           </div>
 
           <button
-            onClick={drawThreeCards}
+            onClick={drawSixCards}
             className="mt-6 w-full rounded-full bg-purple-300 px-8 py-4 font-bold text-[#120914] shadow-lg shadow-purple-950/40 transition hover:bg-purple-200"
           >
-            {readingTypeLabels[readingType]} Açılımı Yap
+            {readingTypeLabels[readingType]} 6 Kart Açılımı Yap
           </button>
         </div>
       </div>
 
-      {drawnCards.length > 0 && (
+      {drawnCards.length > 0 && readingResult && (
         <>
-          <div className="mt-14 grid w-full gap-6 md:grid-cols-3">
-            {drawnCards.map((item) => (
-              <TarotResultCard
-                key={`${item.position}-${item.card.id}`}
-                position={item.position}
-                card={item.card}
-                readingTypeLabel={readingTypeLabels[readingType]}
-                meaning={getCardMeaning(item.card)}
-              />
-            ))}
-          </div>
+          <section className="mt-14 w-full">
+            <div className="mb-6 text-center">
+              <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
+                Geçmiş Zaman
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-white">
+                Geçmişten Gelen İz
+              </h2>
+            </div>
 
-          <div className="mt-8 w-full max-w-4xl rounded-[2rem] border border-purple-300/30 bg-purple-300/10 p-8 text-left shadow-2xl backdrop-blur">
-            <p className="mb-3 text-sm uppercase tracking-[0.25em] text-purple-200">
-              Açılımın Ana Mesajı
-            </p>
+            <div className="grid w-full gap-6 md:grid-cols-2">
+              {pastCards.map((item) => (
+                <TarotResultCard
+                  key={`${item.position}-${item.card.id}`}
+                  position={item.position}
+                  card={item.card}
+                  readingTypeLabel={readingTypeLabels[readingType]}
+                  meaning={getCardMeaning(item.card)}
+                />
+              ))}
+            </div>
 
-            <p className="text-lg leading-8 text-zinc-200">
-              {getSpreadSummary()}
-            </p>
-          </div>
+            <ReadingTextBox
+              label="Geçmiş Zaman Yorumu"
+              section={readingResult.pastSummary}
+            />
+          </section>
+
+          <section className="mt-12 w-full">
+            <div className="mb-6 text-center">
+              <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
+                Şimdiki Zaman
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-white">
+                İçinde Bulunduğun Enerji
+              </h2>
+            </div>
+
+            <div className="grid w-full gap-6 md:grid-cols-2">
+              {presentCards.map((item) => (
+                <TarotResultCard
+                  key={`${item.position}-${item.card.id}`}
+                  position={item.position}
+                  card={item.card}
+                  readingTypeLabel={readingTypeLabels[readingType]}
+                  meaning={getCardMeaning(item.card)}
+                />
+              ))}
+            </div>
+
+            <ReadingTextBox
+              label="Şimdiki Zaman Yorumu"
+              section={readingResult.presentSummary}
+            />
+          </section>
+
+          <section className="mt-12 w-full">
+            <div className="mb-6 text-center">
+              <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
+                Gelecek Zaman
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-white">
+                Yakındaki Yön
+              </h2>
+            </div>
+
+            <div className="grid w-full gap-6 md:grid-cols-2">
+              {futureCards.map((item) => (
+                <TarotResultCard
+                  key={`${item.position}-${item.card.id}`}
+                  position={item.position}
+                  card={item.card}
+                  readingTypeLabel={readingTypeLabels[readingType]}
+                  meaning={getCardMeaning(item.card)}
+                />
+              ))}
+            </div>
+
+            <ReadingTextBox
+              label="Gelecek Zaman Yorumu"
+              section={readingResult.futureSummary}
+            />
+          </section>
+
+          <section className="mt-12 grid w-full gap-6 lg:grid-cols-2">
+            <ReadingTextBox
+              label="Genel Akış"
+              section={readingResult.flowSummary}
+              variant="highlight"
+            />
+
+            <ReadingTextBox
+              label="Tavsiye"
+              section={readingResult.advice}
+              variant="highlight"
+            />
+          </section>
         </>
       )}
     </PageShell>
