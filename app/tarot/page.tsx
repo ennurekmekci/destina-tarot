@@ -90,8 +90,11 @@ export default function TarotPage() {
   );
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
-  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
+  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>(
+    [],
+  );
   const [isHistoryLoaded, setIsHistoryLoaded] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   useEffect(() => {
     const savedHistory = localStorage.getItem("destina-reading-history");
@@ -114,44 +117,51 @@ export default function TarotPage() {
     );
   }, [readingHistory, isHistoryLoaded]);
 
-  function drawSixCards() {
-  const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
+  async function drawSixCards() {
+    setIsDrawing(true);
+    setDrawnCards([]);
+    setReadingResult(null);
 
-  const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
-    position: positions[index],
-    card,
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 900));
 
-  const generatedReading = generateSixCardReading({
-    question: userQuestion,
-    readingType,
-    drawnCards: selectedCards,
-  });
+    const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
-  const newHistoryItem: ReadingHistoryItem = {
-    id: `${Date.now()}-${Math.random()}`,
-    readingType,
-    question: userQuestion.trim() || "Niyet yazılmadı",
-    cards: selectedCards,
-    createdAt: new Date().toLocaleTimeString("tr-TR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-    summary: {
-      flowHeadline: generatedReading.flowSummary.headline,
-      flowDetail: generatedReading.flowSummary.detail,
-      adviceHeadline: generatedReading.advice.headline,
-      adviceDetail: generatedReading.advice.detail,
-    },
-  };
+    const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
+      position: positions[index],
+      card,
+    }));
 
-  setDrawnCards(selectedCards);
-  setReadingResult(generatedReading);
-  setReadingHistory((previousHistory) => [
-    newHistoryItem,
-    ...previousHistory.slice(0, 4),
-  ]);
-}
+    const generatedReading = generateSixCardReading({
+      question: userQuestion,
+      readingType,
+      drawnCards: selectedCards,
+    });
+
+    const newHistoryItem: ReadingHistoryItem = {
+      id: `${Date.now()}-${Math.random()}`,
+      readingType,
+      question: userQuestion.trim() || "Niyet yazılmadı",
+      cards: selectedCards,
+      createdAt: new Date().toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      summary: {
+        flowHeadline: generatedReading.flowSummary.headline,
+        flowDetail: generatedReading.flowSummary.detail,
+        adviceHeadline: generatedReading.advice.headline,
+        adviceDetail: generatedReading.advice.detail,
+      },
+    };
+
+    setDrawnCards(selectedCards);
+    setReadingResult(generatedReading);
+    setReadingHistory((previousHistory) => [
+      newHistoryItem,
+      ...previousHistory.slice(0, 4),
+    ]);
+    setIsDrawing(false);
+  }
 
   function getCardMeaning(card: DrawnCard["card"]) {
     if (readingType === "love") {
@@ -262,12 +272,29 @@ export default function TarotPage() {
 
           <button
             onClick={drawSixCards}
-            className="mt-6 w-full rounded-full bg-purple-300 px-8 py-4 font-bold text-[#120914] shadow-lg shadow-purple-950/40 transition hover:bg-purple-200"
+            disabled={isDrawing}
+            className="mt-6 w-full rounded-full bg-purple-300 px-8 py-4 font-bold text-[#120914] shadow-lg shadow-purple-950/40 transition hover:bg-purple-200 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {readingTypeLabels[readingType]} 6 Kart Açılımı Yap
+            {isDrawing
+              ? "Destina kartları karıştırıyor..."
+              : `${readingTypeLabels[readingType]} 6 Kart Açılımı Yap`}
           </button>
         </div>
       </div>
+
+      {isDrawing && (
+        <div className="mt-14 w-full rounded-[2rem] border border-purple-300/25 bg-white/10 p-8 text-center shadow-2xl backdrop-blur">
+          <p className="mb-3 text-4xl">🌙</p>
+
+          <p className="text-2xl font-bold text-white">
+            Destina kartları karıştırıyor...
+          </p>
+
+          <p className="mt-3 leading-7 text-zinc-300">
+            Niyetin okunuyor, kartlar seçiliyor ve açılım hazırlanıyor.
+          </p>
+        </div>
+      )}
 
       {drawnCards.length > 0 && readingResult && (
         <>
