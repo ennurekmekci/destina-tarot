@@ -190,12 +190,6 @@ export default function TarotPage() {
         </Link>
 
         <div className="flex flex-wrap gap-4">
-          <Link
-            href="/symbols"
-            className="text-sm font-semibold text-purple-200 transition hover:text-purple-100"
-          >
-            Sembol Sözlüğü
-          </Link>
 
           <Link
             href="/history"
