@@ -199,7 +199,7 @@ function getPairInterpretation(
 
   return {
     title: relationship.title,
-    detail: `${firstCard.turkishName} ve ${secondCard.turkishName} birlikte okunduğunda, ${firstRole} ${secondRole} ile birleşiyor. ${relationship.detail}`,
+    detail: `${firstCard.turkishName} ${firstRole} öne çıkarırken, ${secondCard.turkishName} ${secondRole} gündeme getiriyor. ${relationship.detail}`,
     advice: relationship.advice,
   };
 }
@@ -228,20 +228,20 @@ function generatePairSummary({
   if (period === "past") {
     return {
       headline: `${periodEmoji} ${formatHeadlineTitle(pair.title)}`,
-      detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, ${context.topic} konusunda geçmişten gelen ana izi gösteriyor. ${pair.detail}`,
+      detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, ${context.topic} alanında "${pair.title}" temasını anlatıyor. ${pair.detail}`,
     };
   }
 
   if (period === "present") {
     return {
       headline: `${periodEmoji} ${formatHeadlineTitle(pair.title)}`,
-      detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, şu anda değil; içinde bulunduğun zamanın ana dinamiğinde birlikte çalışıyor. ${pair.detail}`,
+      detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, bu dönemin merkezindeki "${pair.title}" enerjisini öne çıkarıyor. ${pair.detail}`,
     };
   }
 
   return {
     headline: `${periodEmoji} ${formatHeadlineTitle(pair.title)}`,
-    detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, bu sürecin nereye doğru akabileceğini gösteriyor. ${pair.detail}`,
+    detail: `${periodLabel} tarafında ${firstCard.turkishName} ve ${secondCard.turkishName}, sürecin "${pair.title}" yönüne akabileceğini gösteriyor. ${pair.detail}`,
   };
 }
 
@@ -276,9 +276,9 @@ function generateFlowSummary({
 
   return {
     headline: `✨ ${formatHeadlineTitle(pastPair.title)} → ${formatHeadlineTitle(
-  presentPair.title,
-)} → ${formatHeadlineTitle(futurePair.title)}`,
-    detail: `Bu altı kart birlikte okunduğunda açılım tek tek kartlardan değil, bir süreçten bahsediyor. Geçmiş zaman "${pastPair.title}" ile başlamış; bu enerji şimdiki zamanda "${presentPair.title}" haline gelmiş. Gelecek zaman ise "${futurePair.title}" yönüne açılıyor. Yani ${context.topic} konusunda mesele tek bir olay değil; geçmişten gelen bir etki, bugün alınan bir farkındalık ve gelecekte şekillenebilecek bir yön var.`,
+      presentPair.title,
+    )} → ${formatHeadlineTitle(futurePair.title)}`,
+    detail: `Bu açılım ${context.topic} alanında tek bir cevaptan çok, üç aşamalı bir süreci anlatıyor. Geçmiş zaman "${pastPair.title}" temasını taşırken, şimdiki zaman "${presentPair.title}" noktasına gelmiş görünüyor. Gelecek zaman ise "${futurePair.title}" yönünü öne çıkarıyor. Bu yüzden kartların genel mesajı, sürecin nereden gelip hangi yöne evrilebileceğini okumakla ilgili.`,
   };
 }
 
@@ -306,21 +306,21 @@ function generateAdvice({
 
   if (readingType === "love") {
     return {
-      headline: "🧭 Kalbinin hızını değil, bağın sağlığını takip et.",
-      detail: `Duygusal netlik istiyorsan bunu acele, baskı ya da korkuyla değil; açık iletişim, özsaygı ve sakin gözlemle destekle. ${presentPair.advice} ${futurePair.advice}`,
+      headline: `🧭 ${formatHeadlineTitle(presentPair.title)} enerjisini, ${futurePair.title} ile dengele.`,
+      detail: `Bu açılımda kalbin için ana öneri şu: içinde bulunduğun duyguyu hemen sonuca zorlamadan, gelecek zamanın gösterdiği yöne daha sakin ve bilinçli ilerlemek. ${presentPair.advice} ${futurePair.advice}`,
     };
   }
 
   if (readingType === "career") {
     return {
-      headline: "🧭 Beklemek yerine görünür ve düzenli adım at.",
-      detail: `Başvuru, çalışma, plan veya hedef konusunda neyi ertelediğini fark et ve onu küçük parçalara bölerek ilerle. ${presentPair.advice} ${futurePair.advice}`,
+      headline: `🧭 ${formatHeadlineTitle(presentPair.title)} noktasından, ${futurePair.title} yönüne ilerle.`,
+      detail: `Bu açılım sana sadece beklemeyi değil, şu anki enerjiyi daha düzenli ve görünür bir adıma çevirmeyi öneriyor. ${presentPair.advice} ${futurePair.advice}`,
     };
   }
 
   return {
-    headline: "🧭 Neyin bittiğini ve neyin seni tuttuğunu ayırt et.",
-    detail: `Kendini zorlamadan ama kendinden de kaçmadan ilerle. ${presentPair.advice} ${futurePair.advice}`,
+    headline: `🧭 ${formatHeadlineTitle(presentPair.title)} ile ${futurePair.title} arasındaki mesajı takip et.`,
+    detail: `Bu açılımda asıl öneri, içinde bulunduğun süreci fark edip gelecek zamanın gösterdiği yöne daha bilinçli yaklaşmak. ${presentPair.advice} ${futurePair.advice}`,
   };
 }
 

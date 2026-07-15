@@ -18,6 +18,61 @@ export const combinationMeanings: Record<string, CombinationMeaning> = {
     advice:
       "Yeni bir adım atacaksan bunu sadece hevesle değil, yeteneğini ve imkanlarını görünür kılarak destekle.",
   },
+    "5-6": {
+    title: "güvenli ve ciddi zemin arayışı",
+    general:
+      "Bu ikili, kişinin hayatında daha sağlam, düzenli ve güvenilir bir yapı kurma ihtiyacını anlatır. İmparator sınır ve düzeni, Aziz ise değerler ve rehberliği öne çıkarır.",
+    love:
+      "Aşkta bu ikili, ilişkinin sadece duygusal çekimle değil; güven, netlik, ortak değerler ve ciddiyetle değerlendirilmesi gerektiğini gösterir. Geçmişte daha sağlam bir zemin arama ya da ilişkiyi belli kurallar içinde anlama eğilimi etkili olmuş olabilir.",
+    career:
+      "Kariyerde bu ikili, disiplinli ilerleme, kuralları bilme, mentor/hoca desteği alma ve hedefleri daha resmi bir zemine oturtma ihtiyacını gösterir.",
+    advice:
+      "Güven arıyorsan sadece hisse değil, davranışların tutarlılığına ve ortak değerlere de bak.",
+  },
+    "3-8": {
+    title: "sezgiyi yöne dönüştürme",
+    general:
+      "Bu ikili, içten içe hissedilen bir şeyin artık pasif kalmadan bir yöne taşınması gerektiğini anlatır. Sezgi güçlüdür ama tek başına yeterli değildir; onu bilinçli bir karara dönüştürmek gerekir.",
+    love:
+      "Aşkta bu ikili, söylenmeyen duyguların ya da içten içe hissedilen çekimin artık bir yön aradığını gösterir. Kalp bir şey hissediyor olabilir; fakat bu his netleşmeden hareket edilirse karışıklık yaratabilir.",
+    career:
+      "Kariyerde bu ikili, içgörü ve sezgiyi somut bir hedefe yönlendirme ihtiyacını anlatır. Ne istediğini hissediyorsan, bunu planlı bir adıma çevirmek gerekir.",
+    advice:
+      "İç sesini yok sayma ama sadece hisle de ilerleme; sezgini net bir yöne ve bilinçli bir adıma dönüştür.",
+  },
+  "6-16": {
+    title: "yoğun bağı değerlerle sınama",
+    general:
+      "Bu ikili, kişiyi güçlü şekilde çeken ama aynı zamanda sorgulatan bir bağın değerler, sınırlar ve doğruluk üzerinden değerlendirilmesi gerektiğini anlatır.",
+    love:
+      "Aşkta bu ikili, yoğun çekim ya da bırakamama hissinin ilişkiyi gerçekten sağlıklı yapıp yapmadığını sorgulatır. Tutku güçlü olabilir; fakat ortak değerler, güven ve saygı yoksa bu bağ kişiyi yorabilir.",
+    career:
+      "Kariyerde bu ikili, kişiyi içine çeken ama yorabilen bir düzenin kurallar, etik değerler veya uzun vadeli hedeflerle sınanması gerektiğini anlatır.",
+    advice:
+      "Seni çeken şeyi sadece yoğunluğu ile değerlendirme; bu bağın değerlerine, sınırlarına ve iç huzuruna uyup uymadığına bak.",
+  },
+  "4-15": {
+    title: "şefkatle denge kurma",
+    general:
+      "Bu ikili, büyüyen ve beslenen bir alanın sabır, ölçü ve dengeyle daha sağlıklı hale gelebileceğini anlatır. Burada hızlı sonuçtan çok yumuşak ama istikrarlı gelişim önemlidir.",
+    love:
+      "Aşkta bu ikili, duygusal sıcaklık ile sağlıklı sınırların birlikte kurulması gerektiğini gösterir. Sevgi, ilgi ve yakınlık var olabilir; fakat bunun aceleyle değil, dengeli ve karşılıklı uyumla büyümesi gerekir.",
+    career:
+      "Kariyerde bu ikili, üretkenliği sürdürülebilir bir düzene oturtmayı anlatır. Emek verilen şey büyüyebilir ama tempo ve denge korunmalıdır.",
+    advice:
+      "Sevgi ya da emek verdiğin şeyi büyütürken kendini tüketme; yakınlığı ve ilgiyi sağlıklı bir dengeyle taşı.",
+  },
+  "2-3": {
+    title: "sezgiyi iletişime dönüştürme",
+    general:
+      "Bu ikili, içten içe hissedilen bir şeyin artık daha bilinçli şekilde ifade edilmesi gerektiğini anlatır. Baş Rahibe sezgiyi, Büyücü ise bunu söz, niyet ve eyleme dönüştürme gücünü temsil eder.",
+    love:
+      "Aşkta bu ikili, söylenmemiş duyguların veya içten içe hissedilen bir çekimin iletişimle görünür hale gelebileceğini gösterir. Burada acele etmek değil, doğru zamanda doğru cümleyi kurmak önemlidir.",
+    career:
+      "Kariyerde bu ikili, içgörü, fikir ve sezgiyi somut bir sunuma, başvuruya, projeye veya üretime dönüştürmeyi anlatır.",
+    advice:
+      "İçinde hissettiğin şeyi tamamen saklama; netleştiğinde bunu sakin, doğru ve etkili bir şekilde ifade et.",
+  },
     "4-16": {
     title: "tüketen düzenden üretkenliğe geçiş",
     general:
