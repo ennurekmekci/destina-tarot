@@ -90,5 +90,3 @@ Profesyonel psikolojik, hukuki, finansal veya tıbbi tavsiye yerine geçmez.
 
 Bu proje, kişisel gelişim ve frontend pratiği amacıyla geliştirilmiştir.
 
-
-https://destina-tarot.vercel.app/
