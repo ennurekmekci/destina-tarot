@@ -8,7 +8,22 @@ type PairRelationship = {
 };
 
 function getCardIntelligence(card: TarotCard) {
-  return cardIntelligence[card.id];
+  const intelligence = cardIntelligence[card.id];
+
+  if (intelligence) {
+    return intelligence;
+  }
+
+  return {
+    energy: "neutral" as const,
+    movement: "balancing" as const,
+    themeGroup: "balance" as const,
+    coreMessage: `${card.turkishName} kartı "${
+      card.keywords[0] || "denge"
+    }" temasını taşır.`,
+    shadowMessage: `${card.turkishName} kartında bu tema dengesiz yaşanırsa kafa karışıklığı yaratabilir.`,
+    adviceMessage: `${card.turkishName} kartının mesajını sakin ve ölçülü şekilde değerlendir.`,
+  };
 }
 
 export function getPairRelationship(firstCard: TarotCard, secondCard: TarotCard) {

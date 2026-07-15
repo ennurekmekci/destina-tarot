@@ -84,7 +84,21 @@ function getCombinationMeaning(
 }
 
 function getCardNarrative(card: TarotCard) {
-  return cardNarratives[card.id];
+  const narrative = cardNarratives[card.id];
+
+  if (narrative) {
+    return narrative;
+  }
+
+  const mainKeyword = card.keywords[0] || "ana tema";
+
+  return {
+    generalRole: `${card.turkishName} kartının "${mainKeyword}" temasını`,
+    loveRole: `${card.turkishName} kartının ilişkilerde "${mainKeyword}" temasını`,
+    careerRole: `${card.turkishName} kartının kariyer ve hedeflerde "${mainKeyword}" temasını`,
+    pressure: "bu temayı dengesiz yaşamak",
+    strength: mainKeyword,
+  };
 }
 
 export function analyzeQuestion(
