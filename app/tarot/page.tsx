@@ -248,7 +248,7 @@ export default function TarotPage() {
           <textarea
             value={userQuestion}
             onChange={(event) => setUserQuestion(event.target.value)}
-            placeholder="Örneğin: Staj bulabilecek miyim?"
+            placeholder="Örneğin: Şu an görmem gereken mesaj ne?"
             className="min-h-32 w-full resize-none rounded-3xl border border-purple-300/30 bg-[#120914]/70 px-5 py-4 text-white outline-none placeholder:text-zinc-500 focus:border-purple-300"
           />
 
