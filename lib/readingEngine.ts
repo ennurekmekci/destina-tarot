@@ -93,9 +93,9 @@ function getCardNarrative(card: TarotCard) {
   const mainKeyword = card.keywords[0] || "ana tema";
 
   return {
-    generalRole: `${card.turkishName} kartının "${mainKeyword}" temasını`,
-    loveRole: `${card.turkishName} kartının ilişkilerde "${mainKeyword}" temasını`,
-    careerRole: `${card.turkishName} kartının kariyer ve hedeflerde "${mainKeyword}" temasını`,
+    generalRole: `"${mainKeyword}" temasını`,
+    loveRole: `ilişkilerde "${mainKeyword}" temasını`,
+    careerRole: `kariyer ve hedeflerde "${mainKeyword}" temasını`,
     pressure: "bu temayı dengesiz yaşamak",
     strength: mainKeyword,
   };

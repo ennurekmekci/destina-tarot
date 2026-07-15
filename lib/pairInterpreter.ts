@@ -1,5 +1,10 @@
 import type { TarotCard } from "@/data/tarotCards";
-import { cardIntelligence } from "@/lib/cardIntelligence";
+import {
+  cardIntelligence,
+  type CardEnergy,
+  type CardMovement,
+  type CardThemeGroup,
+} from "@/lib/cardIntelligence";
 
 type PairRelationship = {
   title: string;
@@ -14,15 +19,137 @@ function getCardIntelligence(card: TarotCard) {
     return intelligence;
   }
 
+  const text = `${card.turkishName} ${card.name} ${card.keywords.join(" ")}`
+    .toLocaleLowerCase("tr-TR");
+
+  const hasAny = (words: string[]) => words.some((word) => text.includes(word));
+
+  let energy: CardEnergy = "neutral";
+  let movement: CardMovement = "reflective";
+  let themeGroup: CardThemeGroup = "wisdom";
+
+  if (
+    hasAny([
+      "başlangıç",
+      "fırsat",
+      "ilham",
+      "kıvılcım",
+      "öğrenme",
+      "heves",
+      "merak",
+    ])
+  ) {
+    energy = "positive";
+    movement = "active";
+    themeGroup = "beginning";
+  }
+
+  if (hasAny(["plan", "karar", "seçim", "kararsızlık", "blokaj"])) {
+    energy = text.includes("blokaj") || text.includes("kararsızlık") ? "challenging" : "neutral";
+    movement = "reflective";
+    themeGroup = text.includes("kararsızlık") || text.includes("blokaj")
+      ? "uncertainty"
+      : "choice";
+  }
+
+  if (hasAny(["beklenti", "bekleme", "sabır"])) {
+    energy = "neutral";
+    movement = "passive";
+    themeGroup = "waiting";
+  }
+
+  if (
+    hasAny([
+      "kutlama",
+      "zafer",
+      "takdir",
+      "başarı",
+      "mutluluk",
+      "dilek",
+      "tatmin",
+      "kalıcılık",
+    ])
+  ) {
+    energy = "positive";
+    movement = "completing";
+    themeGroup = "success";
+  }
+
+  if (hasAny(["rekabet", "gerilim", "mücadele", "çatışma", "gurur"])) {
+    energy = "challenging";
+    movement = "active";
+    themeGroup = "disruption";
+  }
+
+  if (hasAny(["savunma", "direnç", "sınır", "dayanıklılık"])) {
+    energy = "neutral";
+    movement = "active";
+    themeGroup = "strength";
+  }
+
+  if (hasAny(["hız", "haber", "gelişme", "ataklık", "hareket", "ilerleme"])) {
+    energy = "positive";
+    movement = "active";
+    themeGroup = "progress";
+  }
+
+  if (hasAny(["yük", "sorumluluk", "baskı", "kısıtlanma", "korku", "kaygı", "uykusuzluk"])) {
+    energy = "challenging";
+    movement = "reflective";
+    themeGroup = "attachment";
+  }
+
+  if (hasAny(["son", "tükeniş", "kapanış", "uzaklaşma", "bırakma", "geçiş"])) {
+    energy = "challenging";
+    movement = "transformative";
+    themeGroup = "ending";
+  }
+
+  if (hasAny(["şifa", "iyileşme", "duygu", "uyum", "bağ", "şefkat", "duyarlılık", "olgun duygu"])) {
+    energy = "positive";
+    movement = "healing";
+    themeGroup = "hope";
+  }
+
+  if (hasAny(["pişmanlık", "kayıp", "üzüntü", "kalp kırıklığı", "acı"])) {
+    energy = "challenging";
+    movement = "healing";
+    themeGroup = "ending";
+  }
+
+  if (hasAny(["netlik", "fikir", "gerçek", "zeka", "mantık", "otorite"])) {
+    energy = "neutral";
+    movement = "reflective";
+    themeGroup = "justice";
+  }
+
+  if (hasAny(["strateji", "gizlilik", "kaçınma", "belirsizlik", "hayal", "seçenek"])) {
+    energy = "neutral";
+    movement = "reflective";
+    themeGroup = "uncertainty";
+  }
+
+  if (hasAny(["para", "güvenlik", "emek", "çalışma", "ustalık", "iş birliği", "maddi güç"])) {
+    energy = "positive";
+    movement = "balancing";
+    themeGroup = "structure";
+  }
+
+  if (hasAny(["öz güven", "çekim", "yaratıcılık", "liderlik", "vizyon"])) {
+    energy = "positive";
+    movement = "active";
+    themeGroup = "power";
+  }
+
   return {
-    energy: "neutral" as const,
-    movement: "balancing" as const,
-    themeGroup: "balance" as const,
+    energy,
+    movement,
+    themeGroup,
     coreMessage: `${card.turkishName} kartı "${
-      card.keywords[0] || "denge"
+      card.keywords[0] || "ana tema"
     }" temasını taşır.`,
-    shadowMessage: `${card.turkishName} kartında bu tema dengesiz yaşanırsa kafa karışıklığı yaratabilir.`,
-    adviceMessage: `${card.turkishName} kartının mesajını sakin ve ölçülü şekilde değerlendir.`,
+    shadowMessage: `${card.turkishName} kartında bu tema dengesiz yaşanırsa zorlayıcı hale gelebilir.`,
+    adviceMessage: `${card.turkishName} kartının mesajını sakin ve bilinçli şekilde değerlendir.`,
   };
 }
 
