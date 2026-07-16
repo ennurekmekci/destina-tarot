@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PageShell from "@/components/PageShell";
 import ReadingTypeButton from "@/components/ReadingTypeButton";
@@ -88,6 +89,7 @@ export default function TarotPage() {
   const [readingResult, setReadingResult] = useState<SixCardReading | null>(
     null,
   );
+  const router = useRouter();
   const [readingType, setReadingType] = useState<ReadingType>("general");
   const [userQuestion, setUserQuestion] = useState("");
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>(
@@ -118,50 +120,66 @@ export default function TarotPage() {
   }, [readingHistory, isHistoryLoaded]);
 
   async function drawSixCards() {
-    setIsDrawing(true);
-    setDrawnCards([]);
-    setReadingResult(null);
+  setIsDrawing(true);
+  setDrawnCards([]);
+  setReadingResult(null);
 
-    await new Promise((resolve) => setTimeout(resolve, 900));
+  await new Promise((resolve) => setTimeout(resolve, 900));
 
-    const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
+  const shuffledCards = [...tarotCards].sort(() => Math.random() - 0.5);
 
-    const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
-      position: positions[index],
-      card,
-    }));
+  const selectedCards = shuffledCards.slice(0, 6).map((card, index) => ({
+    position: positions[index],
+    card,
+  }));
 
-    const generatedReading = generateSixCardReading({
-      question: userQuestion,
-      readingType,
-      drawnCards: selectedCards,
-    });
+  const generatedReading = generateSixCardReading({
+    question: userQuestion,
+    readingType,
+    drawnCards: selectedCards,
+  });
 
-    const newHistoryItem: ReadingHistoryItem = {
-      id: `${Date.now()}-${Math.random()}`,
-      readingType,
-      question: userQuestion.trim() || "Niyet yazılmadı",
-      cards: selectedCards,
-      createdAt: new Date().toLocaleTimeString("tr-TR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      summary: {
-        flowHeadline: generatedReading.flowSummary.headline,
-        flowDetail: generatedReading.flowSummary.detail,
-        adviceHeadline: generatedReading.advice.headline,
-        adviceDetail: generatedReading.advice.detail,
-      },
-    };
+  const newHistoryItem: ReadingHistoryItem = {
+    id: `${Date.now()}-${Math.random()}`,
+    readingType,
+    question: userQuestion.trim() || "Niyet yazılmadı",
+    cards: selectedCards,
+    createdAt: new Date().toLocaleTimeString("tr-TR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    summary: {
+      flowHeadline: generatedReading.flowSummary.headline,
+      flowDetail: generatedReading.flowSummary.detail,
+      adviceHeadline: generatedReading.advice.headline,
+      adviceDetail: generatedReading.advice.detail,
+    },
+  };
 
-    setDrawnCards(selectedCards);
-    setReadingResult(generatedReading);
-    setReadingHistory((previousHistory) => [
-      newHistoryItem,
-      ...previousHistory.slice(0, 4),
-    ]);
-    setIsDrawing(false);
-  }
+  const currentReading = {
+    ...newHistoryItem,
+    result: generatedReading,
+  };
+
+  const updatedHistory = [newHistoryItem, ...readingHistory.slice(0, 4)];
+
+  setDrawnCards(selectedCards);
+  setReadingResult(generatedReading);
+  setReadingHistory(updatedHistory);
+
+  localStorage.setItem(
+    "destina-reading-history",
+    JSON.stringify(updatedHistory),
+  );
+
+  localStorage.setItem(
+    "destina-current-reading",
+    JSON.stringify(currentReading),
+  );
+
+  setIsDrawing(false);
+  router.push("/reading");
+}
 
   function getCardMeaning(card: DrawnCard["card"]) {
     if (readingType === "love") {
