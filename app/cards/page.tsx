@@ -133,14 +133,14 @@ export default function CardsPage() {
         {filteredCards.length} kart gösteriliyor.
       </p>
 
-      <div className="grid w-full gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid w-full items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filteredCards.map((card) => {
           const isOpen = openCardId === card.id;
 
           return (
             <article
               key={card.id}
-              className="overflow-hidden rounded-[2rem] border border-purple-300/25 bg-white/10 text-left shadow-2xl backdrop-blur transition hover:border-purple-200/50"
+              className="self-start overflow-hidden rounded-[2rem] border border-purple-300/25 bg-white/10 text-left shadow-2xl backdrop-blur transition hover:border-purple-200/50"
             >
               <button
                 type="button"
