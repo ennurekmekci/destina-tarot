@@ -21,7 +21,7 @@ export default function Home() {
         gelecek zaman akışında sembolik bir yorum al.
       </p>
 
-      <div className="grid w-full max-w-3xl gap-5 md:grid-cols-2">
+      <div className="grid w-full max-w-5xl gap-5 md:grid-cols-3">
         <FeatureCard
           href="/tarot"
           icon="🃏"
@@ -34,6 +34,13 @@ export default function Home() {
           icon="🌙"
           title="Açılım Geçmişi"
           description="Önceki açılımlarını, çıkan kartları ve özet yorumlarını tekrar incele."
+        />
+
+        <FeatureCard
+          href="/cards"
+          icon="✦"
+          title="Kart Rehberi"
+          description="78 tarot kartını incele, kart adına göre ara ve yorumlarını gör."
         />
       </div>
     </PageShell>
