@@ -2,6 +2,7 @@ export type TarotCard = {
   id: number;
   name: string;
   turkishName: string;
+  image?: string;
   keywords: string[];
   generalMeaning: string;
   loveMeaning: string;

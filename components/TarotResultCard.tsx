@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { TarotCard } from "@/data/tarotCards";
 
 type TarotResultCardProps = {
@@ -13,44 +16,81 @@ export default function TarotResultCard({
   readingTypeLabel,
   meaning,
 }: TarotResultCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="group relative overflow-hidden rounded-[2rem] border border-purple-300/25 bg-gradient-to-b from-white/15 to-white/5 p-7 text-left shadow-2xl transition hover:-translate-y-1 hover:border-purple-200/50">
-      <div className="absolute right-5 top-5 text-purple-200/60">✦</div>
+    <article className="overflow-hidden rounded-[2rem] border border-purple-300/25 bg-white/10 text-left shadow-2xl backdrop-blur transition hover:border-purple-200/50">
+      <button
+        type="button"
+        onClick={() => setIsOpen((current) => !current)}
+        className="w-full p-5 text-left"
+      >
+        <div className="flex gap-4">
+          <div className="flex h-28 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-purple-300/25 bg-[#120914]/80">
+            {card.image ? (
+              <img
+                src={card.image}
+                alt={card.turkishName}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="text-center">
+                <p className="text-3xl">☾</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-purple-200">
+                  Tarot
+                </p>
+              </div>
+            )}
+          </div>
 
-      <p className="mb-5 text-sm uppercase tracking-[0.25em] text-purple-200">
-        {position}
-      </p>
+          <div className="min-w-0 flex-1">
+            <p className="mb-2 text-xs uppercase tracking-[0.25em] text-purple-200">
+              {position}
+            </p>
 
-      <div className="mb-6 flex h-44 items-center justify-center rounded-[1.5rem] border border-purple-300/20 bg-[#120914]/70">
-        <div className="text-center">
-          <p className="mb-3 text-4xl">☾</p>
+            <h3 className="text-2xl font-bold leading-8 text-white">
+              {card.turkishName}
+            </h3>
 
-          <h2 className="text-3xl font-bold text-white">
-            {card.turkishName}
-          </h2>
+            <p className="mt-1 text-sm text-zinc-400">{card.name}</p>
 
-          <p className="mt-1 text-purple-200">{card.name}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {card.keywords.slice(0, 3).map((keyword) => (
+                <span
+                  key={keyword}
+                  className="rounded-full border border-purple-300/25 bg-purple-300/10 px-3 py-1 text-xs text-purple-100"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+
+            <p className="mt-4 text-sm font-semibold text-purple-200">
+              {isOpen ? "Kart detayını kapat ↑" : "Kart detayını gör ↓"}
+            </p>
+          </div>
         </div>
-      </div>
+      </button>
 
-      <div className="flex flex-wrap gap-2">
-        {card.keywords.map((keyword) => (
-          <span
-            key={keyword}
-            className="rounded-full bg-purple-300/20 px-3 py-1 text-sm text-purple-100"
-          >
-            {keyword}
-          </span>
-        ))}
-      </div>
+      {isOpen && (
+        <div className="border-t border-purple-300/20 px-5 pb-6 pt-5">
+          <p className="mb-2 text-sm uppercase tracking-[0.25em] text-purple-200">
+            {readingTypeLabel} Yorumu
+          </p>
 
-      <div className="mt-6 text-zinc-200">
-        <h3 className="font-semibold text-purple-200">
-          {readingTypeLabel} Yorumu
-        </h3>
+          <p className="leading-8 text-zinc-200">{meaning}</p>
 
-        <p className="mt-2 leading-7">{meaning}</p>
-      </div>
-    </div>
+          <div className="mt-5 rounded-2xl border border-purple-300/20 bg-[#120914]/50 p-4">
+            <p className="mb-2 text-sm font-semibold text-purple-100">
+              Kart Anahtarları
+            </p>
+
+            <p className="text-sm leading-7 text-zinc-300">
+              {card.keywords.join(" • ")}
+            </p>
+          </div>
+        </div>
+      )}
+    </article>
   );
 }
