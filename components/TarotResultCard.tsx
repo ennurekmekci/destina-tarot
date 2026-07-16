@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import TarotCardImage from "@/components/TarotCardImage";
 import type { TarotCard } from "@/data/tarotCards";
 
 type TarotResultCardProps = {
@@ -27,20 +28,7 @@ export default function TarotResultCard({
       >
         <div className="flex gap-4">
           <div className="flex h-28 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-purple-300/25 bg-[#120914]/80">
-            {card.image ? (
-              <img
-                src={card.image}
-                alt={card.turkishName}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="text-center">
-                <p className="text-3xl">☾</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-purple-200">
-                  Tarot
-                </p>
-              </div>
-            )}
+            <TarotCardImage card={card} className="h-full w-full" />
           </div>
 
           <div className="min-w-0 flex-1">
