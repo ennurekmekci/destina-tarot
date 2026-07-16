@@ -170,7 +170,7 @@ export default function ReadingPage() {
           </h2>
         </div>
 
-        <div className="grid w-full gap-6 md:grid-cols-2">
+        <div className="grid w-full items-start gap-6 md:grid-cols-2">
           {pastCards.map((item) => (
             <TarotResultCard
               key={`${item.position}-${item.card.id}`}
@@ -198,7 +198,7 @@ export default function ReadingPage() {
           </h2>
         </div>
 
-        <div className="grid w-full gap-6 md:grid-cols-2">
+        <div className="grid w-full items-start gap-6 md:grid-cols-2">
           {presentCards.map((item) => (
             <TarotResultCard
               key={`${item.position}-${item.card.id}`}
@@ -226,7 +226,7 @@ export default function ReadingPage() {
           </h2>
         </div>
 
-        <div className="grid w-full gap-6 md:grid-cols-2">
+        <div className="grid w-full items-start gap-6 md:grid-cols-2">
           {futureCards.map((item) => (
             <TarotResultCard
               key={`${item.position}-${item.card.id}`}

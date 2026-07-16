@@ -68,15 +68,6 @@ export default function TarotResultCard({
 
           <p className="leading-8 text-zinc-200">{meaning}</p>
 
-          <div className="mt-5 rounded-2xl border border-purple-300/20 bg-[#120914]/50 p-4">
-            <p className="mb-2 text-sm font-semibold text-purple-100">
-              Kart Anahtarları
-            </p>
-
-            <p className="text-sm leading-7 text-zinc-300">
-              {card.keywords.join(" • ")}
-            </p>
-          </div>
         </div>
       )}
     </article>
