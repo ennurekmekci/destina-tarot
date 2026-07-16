@@ -5,6 +5,10 @@ Kullanıcı niyetini yazar, açılım türünü seçer ve 6 kartlık tarot açı
 
 Bu proje, kural tabanlı bir yorum motoru kullanır. Kartlar yalnızca tek tek değil, ikili dönem ilişkileriyle birlikte değerlendirilir.
 
+## Canlı Demo
+
+https://destina-tarot.vercel.app/
+
 ## Özellikler
 
 - 78 kartlık tam tarot destesi
@@ -13,8 +17,12 @@ Bu proje, kural tabanlı bir yorum motoru kullanır. Kartlar yalnızca tek tek d
 - Geçmiş zaman, şimdiki zaman ve gelecek zaman yorumları
 - Kart çiftlerini birlikte değerlendiren kural tabanlı yorum motoru
 - Genel akış ve tavsiye bölümü
+- Açılım sonucunu ayrı sayfada görüntüleme
 - Açılım geçmişini tarayıcıda saklama
+- Kart Rehberi sayfası ile 78 tarot kartını arama ve inceleme
+- Tarot kartı görselleriyle desteklenen açılım ve kart rehberi ekranları
 - Modern ve mistik arayüz tasarımı
+- Vercel Analytics ile temel ziyaret istatistikleri takibi
 
 ## Açılım Yapısı
 
@@ -33,6 +41,8 @@ Her dönem kendi içinde yorumlanır ve ardından kartların genel akışı kull
 - TypeScript
 - Tailwind CSS
 - LocalStorage
+- Vercel
+- Vercel Analytics
 
 ## Kurulum
 
@@ -60,13 +70,16 @@ http://localhost:3000
 app/
   page.tsx
   tarot/
+  reading/
   history/
+  cards/
 
 components/
   FeatureCard.tsx
   HistoryItemCard.tsx
   PageShell.tsx
   ReadingTypeButton.tsx
+  TarotCardImage.tsx
   TarotInfoCard.tsx
   TarotResultCard.tsx
 
@@ -79,7 +92,14 @@ lib/
   readingEngine.ts
   pairInterpreter.ts
   cardIntelligence.ts
+
+public/
+  cards/
 ```
+
+## Görsel Kaynağı
+
+Bu projede kullanılan tarot kartı görselleri, Wikimedia Commons üzerinde kamu malı olarak sunulan Rider–Waite–Smith tarot destesi görselleri temel alınarak edinilmiştir.
 
 ## Not
 
