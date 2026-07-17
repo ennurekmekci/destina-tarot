@@ -247,20 +247,19 @@ export default function TarotPage() {
     setShuffleOffsets(calculateShuffleOffsets());
     setShufflePhase("gather");
 
-    await wait(650);
+    await wait(620);
 
     setDeckCards(shuffleCards(tarotCards));
+    setShuffleOffsets({});
 
     await waitForFrame();
     await waitForFrame();
 
-    setShuffleOffsets(calculateShuffleOffsets());
     setShufflePhase("deal");
 
-    await wait(750);
+    await wait(560);
 
     setShufflePhase("idle");
-    setShuffleOffsets({});
   }
 
   function toggleCardSelection(card: TarotCard) {
