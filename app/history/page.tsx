@@ -1,55 +1,68 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import HistoryItemCard from "@/components/HistoryItemCard";
-import PageHeader from "@/components/PageHeader";
+import HistoryItemCard, {
+  type HistoryReadingItem,
+} from "@/components/HistoryItemCard";
 import PageShell from "@/components/PageShell";
+import { generateSixCardReading } from "@/lib/readingEngine";
 
-type ReadingType = "general" | "love" | "career";
-
-type HistoryCard = {
-  position: string;
-  card: {
-    id: number;
-    name: string;
-    turkishName: string;
+function createCurrentReadingFromHistory(item: HistoryReadingItem) {
+  return {
+    ...item,
+    result: generateSixCardReading({
+      question: item.question,
+      readingType: item.readingType,
+      drawnCards: item.cards,
+    }),
   };
-};
-
-type ReadingHistoryItem = {
-  id: string;
-  readingType: ReadingType;
-  question: string;
-  cards: HistoryCard[];
-  createdAt: string;
-};
-
-const readingTypeLabels: Record<ReadingType, string> = {
-  general: "Genel",
-  love: "Aşk",
-  career: "Kariyer",
-};
+}
 
 export default function HistoryPage() {
-  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
+  const router = useRouter();
+  const [history, setHistory] = useState<HistoryReadingItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const savedHistory = localStorage.getItem("destina-reading-history");
 
     if (savedHistory) {
-      setReadingHistory(JSON.parse(savedHistory));
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch {
+        localStorage.removeItem("destina-reading-history");
+      }
     }
+
+    setIsLoaded(true);
   }, []);
 
-  function clearReadingHistory() {
-    setReadingHistory([]);
-    localStorage.removeItem("destina-reading-history");
+  function openHistoryReading(item: HistoryReadingItem) {
+    const currentReading = createCurrentReadingFromHistory(item);
+
+    localStorage.setItem(
+      "destina-current-reading",
+      JSON.stringify(currentReading),
+    );
+
+    router.push("/reading");
+  }
+
+  if (!isLoaded) {
+    return (
+      <PageShell className="flex min-h-screen max-w-5xl flex-col items-center justify-center py-16 text-center">
+        <div className="rounded-[2rem] border border-purple-300/25 bg-white/10 p-8 shadow-2xl backdrop-blur">
+          <p className="text-lg text-zinc-300">Açılım geçmişi yükleniyor...</p>
+        </div>
+      </PageShell>
+    );
   }
 
   return (
-    <PageShell className="max-w-5xl py-12">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+    <PageShell className="flex min-h-screen max-w-6xl flex-col items-center py-12 md:py-16">
+      <div className="mb-8 flex w-full flex-wrap items-center justify-between gap-4">
         <Link
           href="/"
           className="text-sm font-semibold text-purple-200 transition hover:text-purple-100"
@@ -61,54 +74,52 @@ export default function HistoryPage() {
           href="/tarot"
           className="text-sm font-semibold text-purple-200 transition hover:text-purple-100"
         >
-          Tarot Açılımı →
+          Yeni Açılım Yap →
         </Link>
       </div>
 
-      <PageHeader
-        badge="🌙 Açılım Geçmişi"
-        title="Son Açılımların"
-        description="Daha önce yaptığın açılımları, niyetlerini ve çıkan kartları burada görebilirsin."
-      />
-
-      {readingHistory.length > 0 ? (
-        <div className="rounded-[2rem] border border-purple-300/30 bg-white/5 p-8 text-left shadow-2xl backdrop-blur">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm uppercase tracking-[0.25em] text-purple-200">
-              Kayıtlı Açılımlar
-            </p>
-
-            <button
-              onClick={clearReadingHistory}
-              className="rounded-full border border-purple-300/40 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:bg-purple-300 hover:text-[#120914]"
-            >
-              Geçmişi Temizle
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {readingHistory.map((historyItem) => (
-              <HistoryItemCard
-                key={historyItem.id}
-                historyItem={historyItem}
-                readingTypeLabel={readingTypeLabels[historyItem.readingType]}
-              />
-            ))}
-          </div>
+      <div className="mb-8 text-center">
+        <div className="mb-6 inline-block rounded-full border border-purple-300/30 bg-white/5 px-5 py-2 text-sm uppercase tracking-[0.3em] text-purple-200">
+          ✦ Açılım Geçmişi ✦
         </div>
-      ) : (
-        <div className="rounded-[2rem] border border-purple-300/25 bg-white/5 p-8 text-center shadow-2xl backdrop-blur">
-          <p className="text-lg text-zinc-300">
-            Henüz kayıtlı açılım yok. İlk açılımını yapmak için tarot sayfasına
-            geçebilirsin.
+
+        <h1 className="mb-5 text-5xl font-bold tracking-tight text-white md:text-7xl">
+          Geçmiş Açılımlar
+        </h1>
+
+        <p className="mx-auto max-w-2xl text-lg leading-8 text-zinc-300">
+          Önceki tarot açılımlarını buradan tekrar görüntüleyebilirsin.
+        </p>
+      </div>
+
+      {history.length === 0 ? (
+        <div className="w-full rounded-[2rem] border border-purple-300/25 bg-white/10 p-8 text-center shadow-2xl backdrop-blur">
+          <p className="mb-4 text-2xl">🌙</p>
+
+          <h2 className="mb-3 text-2xl font-bold text-white">
+            Henüz kayıtlı açılım yok
+          </h2>
+
+          <p className="mx-auto mb-6 max-w-xl leading-8 text-zinc-300">
+            İlk açılımını yaptığında burada geçmiş olarak görünecek.
           </p>
 
           <Link
             href="/tarot"
-            className="mt-6 inline-block rounded-full bg-purple-300 px-7 py-3 font-bold text-[#120914] transition hover:bg-purple-200"
+            className="inline-flex rounded-full bg-purple-300 px-6 py-3 font-bold text-[#120914] transition hover:bg-purple-200"
           >
-            Tarot Açılımı Yap
+            İlk Açılımı Başlat
           </Link>
+        </div>
+      ) : (
+        <div className="grid w-full gap-6 md:grid-cols-2">
+          {history.map((item) => (
+            <HistoryItemCard
+              key={item.id}
+              item={item}
+              onOpen={() => openHistoryReading(item)}
+            />
+          ))}
         </div>
       )}
     </PageShell>
