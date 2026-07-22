@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageShell from "@/components/PageShell";
 import TarotResultCard from "@/components/TarotResultCard";
-import type { DrawnCard, ReadingType, SixCardReading } from "@/lib/readingEngine";
+import type {
+  DrawnCard,
+  ReadingType,
+  SixCardReading,
+} from "@/lib/readingEngine";
 
 type CurrentReading = {
   id: string;
@@ -165,6 +169,7 @@ export default function ReadingPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
             Geçmiş Zaman
           </p>
+
           <h2 className="mt-2 text-3xl font-bold text-white">
             Geçmişten Gelen İz
           </h2>
@@ -193,6 +198,7 @@ export default function ReadingPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
             Şimdiki Zaman
           </p>
+
           <h2 className="mt-2 text-3xl font-bold text-white">
             İçinde Bulunduğun Enerji
           </h2>
@@ -221,6 +227,7 @@ export default function ReadingPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-purple-300">
             Gelecek Zaman
           </p>
+
           <h2 className="mt-2 text-3xl font-bold text-white">
             Yakındaki Yön
           </h2>
@@ -244,13 +251,7 @@ export default function ReadingPage() {
         />
       </section>
 
-      <section className="mt-12 grid w-full gap-6 lg:grid-cols-2">
-        <ReadingTextBox
-          label="Genel Akış"
-          section={currentReading.result.flowSummary}
-          variant="highlight"
-        />
-
+      <section className="mt-12 w-full">
         <ReadingTextBox
           label="Tavsiye"
           section={currentReading.result.advice}
